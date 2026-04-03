@@ -17,32 +17,31 @@ const mono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://terminal.daljeetsingh.me"),
   title: {
-    default: "Daljeet Terminal",
-    template: "%s | Daljeet Terminal"
+    default: "ssh — daljeet@portfolio.sh",
+    template: "%s ─ daljeet@portfolio.sh"
   },
-  description: "A living terminal portfolio for Daljeet Singh built with Next.js, xterm.js, and a data-driven virtual filesystem.",
-  applicationName: "Daljeet Terminal",
-  authors: [{ name: "Daljeet Singh Lotey" }],
-  creator: "Daljeet Singh Lotey",
+  description: "Interactive terminal portfolio — navigate projects, run commands, query GitHub live, and ask AI anything about Daljeet Singh.",
+  applicationName: "daljeet@portfolio.sh",
+  authors: [{ name: "Daljeet Singh" }],
+  creator: "Daljeet Singh",
   keywords: [
     "Daljeet Singh",
     "terminal portfolio",
-    "Next.js portfolio",
-    "xterm.js",
+    "interactive portfolio",
     "software developer Mumbai"
   ],
   manifest: "/manifest.json",
   openGraph: {
-    title: "Daljeet Terminal",
-    description: "Explore Daljeet's work through a living terminal with real commands, GitHub data, and AI-assisted answers.",
+    title: "ssh — daljeet@portfolio.sh",
+    description: "Interactive terminal portfolio. Navigate the filesystem, run 30+ commands, and ask AI about my work.",
     url: "https://terminal.daljeetsingh.me",
-    siteName: "Daljeet Terminal",
+    siteName: "daljeet@portfolio.sh",
     type: "website"
   },
   twitter: {
     card: "summary_large_image",
-    title: "Daljeet Terminal",
-    description: "A living terminal portfolio for Daljeet Singh."
+    title: "ssh — daljeet@portfolio.sh",
+    description: "Interactive terminal portfolio by Daljeet Singh."
   },
   icons: {
     icon: "/icon.svg",
@@ -56,7 +55,9 @@ export const viewport: Viewport = {
   themeColor: "#07111f",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover"
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

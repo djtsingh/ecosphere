@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "System Report — ecosphere",
-  description: "Full technical reference for the ecosphere terminal portfolio: commands, filesystem, themes, architecture, and stack."
+  title: "System Report ─ terminal.daljeetsingh.me",
+  description: "Reference for the terminal portfolio: commands, filesystem layout, themes, and tech stack."
 };
 
 /* ─── Data tables ──────────────────────────────────────────────── */
@@ -102,10 +102,7 @@ const FILESYSTEM_TREE = `
     └── aliases.sh
 `.trim();
 
-const ENV_VARS = [
-  { name: "GOOGLE_GENERATIVE_AI_API_KEY", required: true,  description: "Google Gemini key for the /api/ask streaming endpoint" },
-  { name: "GITHUB_TOKEN",                 required: false, description: "OAuth token for higher GitHub API rate limits (60 → 5,000 req/hr)" },
-];
+
 
 /* ─── Section component ─────────────────────────────────────────── */
 
@@ -142,7 +139,7 @@ export default function ReportPage() {
     { id: "filesystem",  label: "Filesystem" },
     { id: "themes",      label: "Themes" },
     { id: "stack",       label: "Stack" },
-    { id: "integrations",label: "Integrations" },
+    { id: "integrations",label: "Live Data" },
     { id: "shortcuts",   label: "Shortcuts" },
   ];
 
@@ -152,7 +149,7 @@ export default function ReportPage() {
       <nav className="sticky top-0 z-20 border-b border-border/60 bg-background/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center gap-4 overflow-x-auto px-4 py-3 text-xs font-mono text-muted/60 sm:px-6">
           <Link href="/" className="mr-4 flex-shrink-0 font-semibold text-accent/80 transition hover:text-accent">
-            ← ecosphere
+            ← terminal
           </Link>
           <span className="flex-shrink-0 text-border/60">system report</span>
           <span className="flex-shrink-0 text-border/40">·</span>
@@ -172,12 +169,11 @@ export default function ReportPage() {
       <header className="border-b border-border/40 bg-surface/40 px-4 py-10 sm:px-6">
         <div className="mx-auto max-w-5xl">
           <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-muted/50">system report</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">ecosphere</h1>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">terminal.daljeetsingh.me</h1>
           <p className="mt-2 font-mono text-muted/70">terminal.daljeetsingh.me</p>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-muted/80">
-            A browser-native terminal portfolio. One JSON-backed virtual filesystem, a command registry with{" "}
-            {COMMANDS.length} commands, live GitHub data via ISR, and an AI ask endpoint grounded in portfolio
-            content. No framework magic hidden behind the curtain — every layer is documented below.
+            A browser-native terminal portfolio with a virtual filesystem, {COMMANDS.length} commands across{" "}
+            {modules.length} modules, live GitHub data, and an AI assistant grounded in portfolio content.
           </p>
           <div className="mt-6 flex flex-wrap gap-3 font-mono text-xs">
             {[
@@ -209,27 +205,26 @@ export default function ReportPage() {
             <div className="space-y-3">
               <h3 className="text-foreground font-medium">What it is</h3>
               <p>
-                ecosphere is a terminal emulator running in the browser, built on{" "}
+                A terminal emulator running in the browser, built on{" "}
                 <strong className="text-foreground/80">xterm.js</strong> and{" "}
                 <strong className="text-foreground/80">Next.js 14 App Router</strong>. It presents a personal
                 portfolio as a navigable virtual filesystem with a Bash-like command interface.
               </p>
               <p>
-                The entire content layer — projects, skills, contact, bio — lives in a single{" "}
-                <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">data/portfolio.json</code>{" "}
-                file. Adding a project means adding a JSON node; the terminal can immediately navigate, cat, and
+                The entire content layer — projects, skills, contact, bio — is driven by a single data file.
+                Adding a project means adding one JSON node; the terminal can immediately navigate, list, and
                 display it without any code changes.
               </p>
             </div>
             <div className="space-y-3">
               <h3 className="text-foreground font-medium">Design principles</h3>
               <ul className="list-inside list-disc space-y-1.5">
-                <li>Command registry pattern: each module exports <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">CommandDefinition[]</code></li>
-                <li>Single source of truth: all content from <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">portfolio.json</code></li>
-                <li>ANSI formatting via <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">lib/ansi.ts</code> — no raw escape strings in business logic</li>
-                <li>React state is minimal: cwd, theme, history, busy flag via Zustand</li>
-                <li>Input goes through xterm.js <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">onData</code> AND a companion HTML input for mobile</li>
-                <li>ISR revalidates GitHub data every 300 s (5 min), no user waits for live fetch on load</li>
+                <li>Command registry pattern — each module exports a typed command definition array</li>
+                <li>Single source of truth — all portfolio content from one data file</li>
+                <li>ANSI formatting abstracted into a helper — no raw escape strings in business logic</li>
+                <li>Minimal React state: cwd, theme, history, busy flag via Zustand</li>
+                <li>Dual input: xterm.js for desktop, companion HTML input for mobile compatibility</li>
+                <li>GitHub data cached server-side and revalidated periodically — no blocking fetch on load</li>
               </ul>
             </div>
           </div>
@@ -240,18 +235,17 @@ export default function ReportPage() {
   Browser
   ┌────────────────────────────────────────────────────────────┐
   │  page.tsx (RSC)                                            │
-  │   ├─ prefetch GitHub snapshot  (getGitHubSnapshot / ISR)   │
-  │   ├─ render system panel (host, filesystem, stack, keys)   │
+  │   ├─ prefetch GitHub snapshot  (ISR cache, server-side)    │
   │   └─ <TerminalWorkbench>  (client component)               │
-  │       ├─ xterm.js  →  onData  →  command parser            │
+  │       ├─ xterm.js  →  input handler  →  command parser     │
   │       ├─ HTML input  (mobile / fallback)                   │
   │       ├─ useTerminalStore (Zustand)                        │
   │       └─ executeCommand() → CommandResult                  │
   │           ├─ portfolio module  (whoami / projects / ...)  │
   │           ├─ filesystem module (ls / cd / cat / ...)      │
   │           ├─ github module     (github / ask)              │
-  │           │   ├─ GET /api/github  → Octokit               │
-  │           │   └─ POST /api/ask   → Vercel AI SDK stream    │
+  │           │   ├─ GitHub integration  (server-side)        │
+  │           │   └─ AI streaming integration (server-side)   │
   │           ├─ theme module      (theme)                     │
   │           ├─ easter-eggs module (neofetch / matrix / ...)  │
   │           └─ utility module    (history / tree / date ...) │
@@ -300,10 +294,8 @@ export default function ReportPage() {
         {/* Filesystem */}
         <Section id="filesystem" title="Virtual Filesystem">
           <p className="mb-4 text-sm leading-7 text-muted/80">
-            The entire filesystem is stored in{" "}
-            <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">data/portfolio.json</code>{" "}
-            under the <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">{"filesystem[\"~\"]"}  </code>{" "}
-            key. Directories are plain objects; files are strings. The terminal traverses this structure for{" "}
+            The virtual filesystem is a nested JSON structure — directories are plain objects, files are strings.
+            The terminal traverses it for{" "}
             <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">ls</code>,{" "}
             <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">cd</code>,{" "}
             <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">cat</code>, and Tab autocomplete.
@@ -316,12 +308,10 @@ export default function ReportPage() {
         {/* Themes */}
         <Section id="themes" title="Theme System">
           <p className="mb-4 text-sm leading-7 text-muted/80">
-            Themes are defined in{" "}
-            <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">lib/themes.ts</code> as records of CSS variable values.
-            Switching a theme updates both the xterm.js renderer and the page CSS variables simultaneously via a{" "}
-            <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">useEffect</code> on{" "}
-            <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">themeName</code> in the Zustand store.
-            Use <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">theme [name]</code> or click a theme in the sidebar.
+            Themes are CSS-variable records. Switching a theme updates both the xterm.js renderer
+            and the page CSS variables simultaneously. Use{" "}
+            <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">theme [name]</code>{" "}
+            in the terminal, or click a theme name in the sidebar.
           </p>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {THEMES.map((t) => (
@@ -354,7 +344,6 @@ export default function ReportPage() {
               <thead>
                 <tr className="border-b border-border/40 bg-surface-strong/60">
                   <th className="px-3 py-2 text-left text-[10px] uppercase tracking-widest text-muted/50">package</th>
-                  <th className="px-3 py-2 text-left text-[10px] uppercase tracking-widest text-muted/50">version</th>
                   <th className="px-3 py-2 text-left text-[10px] uppercase tracking-widest text-muted/50 hidden sm:table-cell">role</th>
                 </tr>
               </thead>
@@ -362,7 +351,6 @@ export default function ReportPage() {
                 {STACK.map((s, i) => (
                   <tr key={s.name} className={`border-b border-border/20 ${i % 2 === 0 ? "" : "bg-surface-strong/20"}`}>
                     <td className="px-3 py-2 text-prompt/80">{s.pkg}</td>
-                    <td className="px-3 py-2 text-accent/70">{s.version}</td>
                     <td className="px-3 py-2 text-muted/50 hidden sm:table-cell font-sans text-[12px]">{s.role}</td>
                   </tr>
                 ))}
@@ -372,54 +360,25 @@ export default function ReportPage() {
         </Section>
 
         {/* Integrations */}
-        <Section id="integrations" title="Integrations & Environment Variables">
+        <Section id="integrations" title="Live Integrations">
           <div className="space-y-6 text-sm text-muted/80">
             <div>
-              <h3 className="mb-2 font-medium text-foreground">GitHub Integration</h3>
+              <h3 className="mb-2 font-medium text-foreground">GitHub</h3>
               <p className="leading-7">
-                The <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">GET /api/github</code> route
-                uses <strong className="text-foreground/80">Octokit</strong> to fetch public repos, aggregate star counts,
-                and list follower counts. The main page prefetches this on the server with{" "}
-                <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">revalidate = 300</code> (ISR).
-                Subsequent browser fetches via the <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">github</code>{" "}
-                command hit the same route with <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">{"cache: \"no-store\""}  </code>.
+                Live GitHub stats — public repos, total stars, and follower count — are fetched server-side
+                and cached for performance. The{" "}
+                <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">github</code>{" "}
+                command refreshes data on demand.
               </p>
             </div>
             <div>
-              <h3 className="mb-2 font-medium text-foreground">AI Ask Integration</h3>
+              <h3 className="mb-2 font-medium text-foreground">AI Assistant</h3>
               <p className="leading-7">
-                The <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">POST /api/ask</code> route
-                streams an answer using <strong className="text-foreground/80">Vercel AI SDK</strong> with Google Gemini 2.0 Flash.
-                The system prompt is grounded in the full <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">portfolio.json</code>{" "}
-                serialized as context, so answers are accurate to actual project data.
+                The{" "}
+                <code className="rounded bg-surface-strong px-1 text-[12px] text-accent/80">ask</code>{" "}
+                command streams AI-generated answers grounded in portfolio content — projects, skills, and
+                background — for accurate, context-aware responses.
               </p>
-            </div>
-            <div>
-              <h3 className="mb-2 font-medium text-foreground">Environment Variables</h3>
-              <div className="overflow-x-auto rounded-lg border border-border/50">
-                <table className="w-full font-mono text-xs">
-                  <thead>
-                    <tr className="border-b border-border/40 bg-surface-strong/60">
-                      <th className="px-3 py-2 text-left text-[10px] uppercase tracking-widest text-muted/50">variable</th>
-                      <th className="px-3 py-2 text-left text-[10px] uppercase tracking-widest text-muted/50">required</th>
-                      <th className="px-3 py-2 text-left text-[10px] uppercase tracking-widest text-muted/50 hidden sm:table-cell">description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {ENV_VARS.map((v, i) => (
-                      <tr key={v.name} className={`border-b border-border/20 ${i % 2 === 0 ? "" : "bg-surface-strong/20"}`}>
-                        <td className="px-3 py-2 text-accent/80">{v.name}</td>
-                        <td className="px-3 py-2">
-                          <span className={v.required ? "text-orange-400/80" : "text-muted/50"}>
-                            {v.required ? "yes" : "optional"}
-                          </span>
-                        </td>
-                        <td className="px-3 py-2 text-muted/50 hidden sm:table-cell font-sans text-[12px]">{v.description}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
             </div>
           </div>
         </Section>
@@ -450,8 +409,13 @@ export default function ReportPage() {
       {/* ── Footer ── */}
       <footer className="border-t border-border/40 px-4 py-6 sm:px-6">
         <div className="mx-auto flex max-w-5xl items-center justify-between font-mono text-[11px] text-muted/40">
-          <span>ecosphere — terminal.daljeetsingh.me</span>
-          <Link href="/" className="transition hover:text-muted/70">← back to terminal</Link>
+          <span>terminal.daljeetsingh.me</span>
+          <div className="flex items-center gap-4">
+            <a href="https://daljeetsingh.me" className="transition hover:text-muted/70" target="_blank" rel="noopener noreferrer">
+              ⇁ full portfolio
+            </a>
+            <Link href="/" className="transition hover:text-muted/70">← terminal</Link>
+          </div>
         </div>
       </footer>
     </div>

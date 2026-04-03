@@ -28,12 +28,13 @@
 
 html {
   scroll-behavior: smooth;
+  height: 100%;
 }
 
 /* ── Body ───────────────────────────────────────────────── */
 body {
   margin: 0;
-  min-height: 100vh;
+  height: 100%;
   /* Flat dark + very subtle grid — no glowing orbs */
   background-color: var(--background);
   background-image:
@@ -68,23 +69,25 @@ button, input { font: inherit; }
 /* ── Terminal host ──────────────────────────────────────── */
 .terminal-host {
   position: relative;
+  touch-action: none;
+  overscroll-behavior: contain;
 }
 .terminal-host .xterm {
   padding: 0;
+  height: 100%;
+}
+.terminal-host .xterm-screen {
+  overflow: hidden !important;
 }
 .terminal-host .xterm-viewport {
   scrollbar-width: thin;
   scrollbar-color: rgba(80, 120, 170, 0.18) transparent;
   border-radius: 0;
 }
-.terminal-host .xterm-screen {
-  width: 100% !important;
-}
 .terminal-host .xterm-helper-textarea {
-  opacity: 0;
-}
-.terminal-host .xterm-cursor-layer .xterm-cursor.xterm-cursor-block {
-  box-shadow: 0 0 8px var(--glow), 0 0 2px var(--prompt);
+  position: fixed !important;
+  top: -9999px !important;
+  left: -9999px !important;
 }
 
 /* ── Selection ──────────────────────────────────────────── */
@@ -93,10 +96,12 @@ button, input { font: inherit; }
 }
 
 /* ── Subtle scanline overlay ────────────────────────────── */
-.scanlines {
+/* Scoped to .scanlines-target — apply only on the xterm pane,
+   NOT over buttons/inputs that need touch/click events.      */
+.scanlines-target {
   position: relative;
 }
-.scanlines::after {
+.scanlines-target::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -108,7 +113,7 @@ button, input { font: inherit; }
     rgba(0, 0, 0, 0.016) 4px
   );
   pointer-events: none;
-  z-index: 20;
+  z-index: 2;
   border-radius: inherit;
 }
 

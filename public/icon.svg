@@ -1,9 +1,1 @@
-<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" rx="112" fill="#07111F"/>
-  <rect x="66" y="92" width="380" height="328" rx="28" fill="#0C1A2D" stroke="#1C3556" stroke-width="8"/>
-  <circle cx="108" cy="132" r="10" fill="#FF6B6B"/>
-  <circle cx="140" cy="132" r="10" fill="#FFD166"/>
-  <circle cx="172" cy="132" r="10" fill="#5EEAD4"/>
-  <path d="M128 208L192 256L128 304" stroke="#5AB2FF" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M242 320H368" stroke="#5EEAD4" stroke-width="28" stroke-linecap="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 120 120" width="120px" height="120px" baseProfile="basic"><rect width="94" height="68" x="13" y="34" opacity=".35"/><rect width="94" height="71" x="13" y="27" fill="#0075ff"/><g opacity=".35"><path d="M29,61.218V51.007l36,14.645v9.941L29,90.17V79.959l23.689-9.336L29,61.218z"/><path d="M72,70h20v8H72V70z"/></g><path fill="#fff" d="M29,57.218V47.007l36,14.645v9.941L29,86.17V75.959l23.689-9.336L29,57.218z"/><path fill="#fff" d="M72,66h20v8H72V66z"/><rect width="94" height="15" x="13" y="25" opacity=".35"/><rect width="94" height="15" x="13" y="21" fill="#52afff"/></svg>

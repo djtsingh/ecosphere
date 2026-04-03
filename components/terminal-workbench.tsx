@@ -106,17 +106,18 @@ export function TerminalWorkbench({ portfolio, initialGitHubSnapshot }: Terminal
       return;
     }
 
+    const isMobile = window.innerWidth < 640;
+
     const term = new Terminal({
       allowTransparency: false,
       cursorBlink: true,
       cursorStyle: "block",
       // xterm cannot resolve CSS variables — provide a concrete font stack
       fontFamily: '"IBM Plex Mono", "Cascadia Code", "Fira Code", "JetBrains Mono", "Menlo", "Consolas", monospace',
-      fontSize: 13,
-      lineHeight: 1.4,
+      fontSize: isMobile ? 12 : 15,
+      lineHeight: isMobile ? 1.3 : 1.4,
       letterSpacing: 0,
-      scrollback: 2000,
-      convertEol: true
+      scrollback: 1000
     });
 
     const fitAddon = new FitAddon();
@@ -396,35 +397,30 @@ export function TerminalWorkbench({ portfolio, initialGitHubSnapshot }: Terminal
   const plainPrompt = `${portfolio.profile.handle}@portfolio:${cwd}$`;
 
   return (
-    <section className="scanlines relative flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-glow">
-      {/* Top accent line */}
-      <div className="absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent" />
+    <section className="relative flex h-full flex-col overflow-hidden bg-surface sm:rounded-xl sm:border sm:border-border sm:shadow-glow">
+      {/* Top accent line — desktop only */}
+      <div className="absolute inset-x-0 top-0 z-10 hidden h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent sm:block" />
 
-      {/* ── Title bar ── */}
-      <header className="relative flex h-11 flex-none items-center border-b border-border bg-surface-strong/70 px-4">
-        {/* Traffic lights */}
+      {/* ── Title bar — desktop only ── */}
+      <header className="relative hidden h-11 flex-none items-center border-b border-border bg-surface-strong/70 px-4 sm:flex">
         <div className="flex items-center gap-[6px]">
           <span className="h-3 w-3 rounded-full bg-[#ff5f57]" aria-hidden="true" />
           <span className="h-3 w-3 rounded-full bg-[#febc2e]" aria-hidden="true" />
           <span className="h-3 w-3 rounded-full bg-[#28c840]" aria-hidden="true" />
         </div>
-
-        {/* Session title — centered absolutely so lights don't shift it */}
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <span className="font-mono text-[12px] text-muted/70">
-            <span className="text-prompt/75">{portfolio.profile.handle}</span>
-            <span className="opacity-40">@portfolio:</span>
-            <span className="text-accent/80">{cwd}</span>
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-20">
+          <span className="truncate font-mono text-sm text-muted/70">
+            <span className="text-prompt/80">{portfolio.profile.handle}</span>
+            <span className="opacity-40">@terminal.daljeetsingh.me:</span>
+            <span className="text-accent/90">{cwd}</span>
           </span>
         </div>
-
-        {/* Ready/running indicator */}
         <div className="ml-auto flex items-center gap-2 font-mono text-[11px]">
           <span
             className={`h-[5px] w-[5px] rounded-full ${isBusy ? "bg-amber-400" : "bg-emerald-500/80"}`}
             aria-hidden="true"
           />
-          <span className={`hidden sm:block ${isBusy ? "text-amber-400/80" : "text-muted/50"}`}>
+          <span className={isBusy ? "text-amber-400/80" : "text-muted/50"}>
             {isBusy ? status : "ready"}
           </span>
         </div>
@@ -434,105 +430,106 @@ export function TerminalWorkbench({ portfolio, initialGitHubSnapshot }: Terminal
       <div className="flex min-h-0 flex-1 lg:grid lg:grid-cols-[minmax(0,1fr)_200px]">
 
         {/* Terminal pane */}
-        <div className="flex flex-col border-b border-border lg:border-b-0 lg:border-r">
+        <div className="flex min-h-0 flex-1 flex-col overflow-hidden lg:border-r lg:border-border">
           {/* xterm surface */}
           <div
-            className="flex-1 cursor-text px-4 py-3"
+            className="scanlines-target relative min-h-0 flex-1 cursor-text overflow-hidden"
             onClick={focusTerminal}
             role="presentation"
           >
-            <div ref={terminalContainerRef} className="terminal-host min-h-[480px]" />
+            <div ref={terminalContainerRef} className="terminal-host absolute inset-0 p-1 sm:p-2" />
           </div>
 
           {/* Input strip */}
           <form
-            className="flex flex-col border-t border-border bg-black/20 px-4 py-2.5"
+            className="flex flex-shrink-0 items-center gap-1.5 border-t border-border/60 bg-black/20 px-2 py-1.5 sm:gap-2 sm:border-border sm:px-3 sm:py-2"
             onSubmit={(event) => {
               event.preventDefault();
               void submitCommand();
             }}
           >
-            <div className="flex items-center gap-2">
-              <span
-                className="hidden select-none font-mono text-[12px] text-prompt/70 sm:block"
-                aria-hidden="true"
-              >
-                {plainPrompt}
-              </span>
-              <input
-                ref={composerRef}
-                autoCapitalize="none"
-                autoComplete="off"
-                autoCorrect="off"
-                className="min-w-0 flex-1 rounded-md border border-border/60 bg-transparent px-3 py-1.5 font-mono text-sm text-foreground outline-none transition placeholder:text-muted/30 focus:border-prompt/50 focus:bg-black/10"
-                onChange={(event) => {
-                  const nextValue = event.target.value;
-                  inputValueRef.current = nextValue;
-                  setInput(nextValue);
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Tab") {
-                    event.preventDefault();
-                    handleAutocomplete();
-                    return;
-                  }
-                  if (event.key === "ArrowUp") {
-                    event.preventDefault();
-                    cycleHistory("up");
-                    return;
-                  }
-                  if (event.key === "ArrowDown") {
-                    event.preventDefault();
-                    cycleHistory("down");
-                  }
-                }}
-                placeholder="enter command…"
-                spellCheck={false}
-                value={input}
-              />
-              <button
-                className="flex-none rounded-md border border-border/60 bg-accent/10 px-3 py-1.5 font-mono text-xs text-accent transition hover:bg-accent/20 disabled:pointer-events-none disabled:opacity-40"
-                disabled={isBusy}
-                type="submit"
-              >
-                exec
-              </button>
-            </div>
-
-            {suggestions.length > 0 ? (
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {suggestions.map((suggestion) => (
-                  <button
-                    key={suggestion}
-                    className="rounded border border-border/50 px-2 py-0.5 font-mono text-[11px] text-muted/70 transition hover:border-accent/40 hover:text-accent"
-                    onClick={() => {
-                      const { prefix } = getEditableTail(inputValueRef.current);
-                      const nextValue = `${prefix}${suggestion}`;
-                      inputValueRef.current = nextValue;
-                      setInput(nextValue);
-                      focusTerminal();
-                    }}
-                    type="button"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            ) : null}
+            {/* Mobile status dot */}
+            <span
+              className={`h-1.5 w-1.5 flex-shrink-0 rounded-full sm:hidden ${isBusy ? "bg-amber-400" : "bg-emerald-500/80"}`}
+              aria-hidden="true"
+            />
+            {/* Desktop prompt label */}
+            <span className="hidden select-none font-mono text-xs text-prompt/70 lg:block" aria-hidden="true">
+              {plainPrompt}
+            </span>
+            <input
+              ref={composerRef}
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect="off"
+              className="min-w-0 flex-1 rounded border border-border/50 bg-transparent px-2 py-1.5 font-mono text-[13px] text-foreground outline-none transition placeholder:text-muted/30 focus:border-prompt/40 sm:rounded-md sm:px-3 sm:py-2 sm:text-sm"
+              onChange={(event) => {
+                const nextValue = event.target.value;
+                inputValueRef.current = nextValue;
+                setInput(nextValue);
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Tab") {
+                  event.preventDefault();
+                  handleAutocomplete();
+                  return;
+                }
+                if (event.key === "ArrowUp") {
+                  event.preventDefault();
+                  cycleHistory("up");
+                  return;
+                }
+                if (event.key === "ArrowDown") {
+                  event.preventDefault();
+                  cycleHistory("down");
+                }
+              }}
+              placeholder="enter command…"
+              spellCheck={false}
+              value={input}
+            />
+            <button
+              className="flex-shrink-0 rounded border border-border/50 bg-accent/10 px-2 py-1.5 font-mono text-[11px] text-accent transition hover:bg-accent/20 active:bg-accent/30 disabled:pointer-events-none disabled:opacity-40 sm:rounded-md sm:px-3 sm:py-2 sm:text-xs"
+              disabled={isBusy}
+              type="submit"
+            >
+              exec
+            </button>
           </form>
+
+          {/* Suggestions — below input, only when present */}
+          {suggestions.length > 0 ? (
+            <div className="flex flex-shrink-0 flex-wrap gap-1 border-t border-border/30 bg-black/10 px-2 py-1 sm:gap-1.5 sm:px-3 sm:py-1.5">
+              {suggestions.map((suggestion) => (
+                <button
+                  key={suggestion}
+                  className="rounded border border-border/40 px-1.5 py-px font-mono text-[10px] text-muted/60 transition hover:border-accent/40 hover:text-accent active:bg-accent/10 sm:px-2 sm:py-0.5 sm:text-xs"
+                  onClick={() => {
+                    const { prefix } = getEditableTail(inputValueRef.current);
+                    const nextValue = `${prefix}${suggestion}`;
+                    inputValueRef.current = nextValue;
+                    setInput(nextValue);
+                    focusTerminal();
+                  }}
+                  type="button"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          ) : null}
         </div>
 
-        {/* ── Sidebar ── */}
+        {/* ── Sidebar — lg+ only ── */}
         <aside className="hidden flex-col divide-y divide-border font-mono text-xs lg:flex">
 
-          {/* Quick run */}
           <div className="px-3 py-2.5">
-            <p className="panel-label mb-2">quick run</p>
+            <p className="panel-label mb-2.5">quick run</p>
             <div className="space-y-px">
               {["whoami", "projects", "github", 'ask "what have you built?"', "theme matrix"].map((cmd) => (
                 <button
                   key={cmd}
-                  className="flex w-full items-center gap-1.5 rounded px-1.5 py-[5px] text-left text-muted/70 transition hover:bg-accent/8 hover:text-accent"
+                  className="flex w-full items-center gap-1.5 rounded px-1.5 py-1 text-left text-xs text-muted/70 transition hover:bg-accent/10 hover:text-accent"
                   onClick={() => void submitCommand(cmd)}
                   type="button"
                 >
@@ -543,10 +540,9 @@ export function TerminalWorkbench({ portfolio, initialGitHubSnapshot }: Terminal
             </div>
           </div>
 
-          {/* Session info */}
           <div className="px-3 py-2.5">
             <p className="panel-label mb-2">session</p>
-            <dl className="space-y-1">
+            <dl className="space-y-1 text-xs">
               <div className="flex justify-between">
                 <dt className="text-muted/50">path</dt>
                 <dd className="text-accent/80">{cwd}</dd>
@@ -557,12 +553,11 @@ export function TerminalWorkbench({ portfolio, initialGitHubSnapshot }: Terminal
               </div>
               <div className="flex justify-between">
                 <dt className="text-muted/50">history</dt>
-                <dd className="text-foreground/80">{history.length} cmds</dd>
+                <dd className="text-foreground/80">{history.length}</dd>
               </div>
             </dl>
           </div>
 
-          {/* GitHub */}
           <div className="px-3 py-2.5">
             <p className="panel-label mb-2">github</p>
             {githubSnapshot ? (
@@ -585,7 +580,6 @@ export function TerminalWorkbench({ portfolio, initialGitHubSnapshot }: Terminal
             )}
           </div>
 
-          {/* Theme switcher */}
           <div className="flex-1 px-3 py-2.5">
             <p className="panel-label mb-2">themes</p>
             <div className="space-y-px">
@@ -611,22 +605,23 @@ export function TerminalWorkbench({ portfolio, initialGitHubSnapshot }: Terminal
         </aside>
       </div>
 
-      {/* ── Status bar ── */}
-      <footer className="flex h-6 flex-none items-center border-t border-border bg-surface-strong/50 px-4 font-mono text-[11px]">
-        <span className="text-accent/40">◈</span>
-        <span className="ml-2 text-muted/60">{cwd}</span>
-        <span className="mx-2.5 text-border/60">│</span>
-        <span className="hidden text-muted/40 sm:block">{portfolio.profile.handle}@portfolio</span>
-        <span className="mx-2.5 hidden text-border/60 sm:block">│</span>
-        <span className={isBusy ? "text-amber-400/60" : "text-emerald-500/50"}>
-          {isBusy ? "● running" : "○ idle"}
+      {/* ── Status bar — desktop only ── */}
+      <footer className="hidden h-6 flex-none items-center border-t border-border bg-surface-strong/50 px-3 font-mono text-[11px] sm:flex">
+        <span className="text-accent/50">◈</span>
+        <span className="ml-2 truncate text-muted/70">{cwd}</span>
+        <span className="mx-2 text-border/60">│</span>
+        <span className="hidden text-muted/50 md:block">{portfolio.profile.handle}@terminal.daljeetsingh.me</span>
+        <span className="hidden text-border/60 md:mx-2 md:block">│</span>
+        <span className={isBusy ? "text-amber-400/70" : "text-emerald-500/60"}>
+          {isBusy ? "● run" : "○ idle"}
         </span>
-        <div className="ml-auto text-muted/30">
-          <a href="/report" className="transition hover:text-muted/60">
-            report
+        <div className="ml-auto flex items-center gap-3">
+          <a href="https://daljeetsingh.me" target="_blank" rel="noopener noreferrer" className="text-muted/40 transition hover:text-muted/70">
+            portfolio
           </a>
-          <span className="mx-2 text-border/40">·</span>
-          <span>v0.2.0</span>
+          <a href="/report" className="text-muted/40 transition hover:text-muted/70">
+            sys·report
+          </a>
         </div>
       </footer>
     </section>
