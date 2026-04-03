@@ -1,4 +1,3 @@
-# Daljeet Terminal
 
 Interactive terminal portfolio for `terminal.daljeetsingh.me`, built with Next.js 14, App Router, TypeScript, xterm.js, Tailwind, Zustand, Octokit, and the Vercel AI SDK.
 
