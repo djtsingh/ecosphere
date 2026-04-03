@@ -1,0 +1,1 @@
+This file exists only so the public directory is preserved before next-pwa generates service worker assets during build.

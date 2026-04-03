@@ -1,0 +1,108 @@
+{
+  "profile": {
+    "name": "Daljeet Singh Lotey",
+    "handle": "daljeet",
+    "title": "Software Developer",
+    "location": "Mumbai, India",
+    "tagline": "Building practical systems across full-stack product engineering, AI, and infrastructure.",
+    "summary": [
+      "Daljeet is a software developer who ships full-stack applications, AI-driven products, and developer tooling with a systems mindset.",
+      "This terminal is designed as a real interface: searchable, extensible, keyboard-first, and grounded in actual portfolio data."
+    ],
+    "primarySite": "https://www.daljeetsingh.me",
+    "terminalSite": "https://terminal.daljeetsingh.me",
+    "resumeUrl": "https://www.daljeetsingh.me/resume.pdf",
+    "email": "git@daljeetsingh.me",
+    "github": {
+      "username": "djtsingh",
+      "url": "https://github.com/djtsingh"
+    },
+    "linkedin": "https://linkedin.com/in/djtsingh"
+  },
+  "skills": {
+    "languages": ["Go", "Python", "TypeScript", "JavaScript", "Java", "C++"],
+    "frontend": ["React", "Next.js", "Vue", "TailwindCSS"],
+    "backend": ["Node.js", "FastAPI", "Django", "Express"],
+    "infra": ["Docker", "Nginx", "Azure", "Linux", "Redis", "PostgreSQL"]
+  },
+  "projects": [
+    {
+      "slug": "janus",
+      "name": "Janus",
+      "description": "Adversarial botnet detection system focused on resilient network telemetry analysis.",
+      "stack": ["Go", "Redis", "Docker", "GeoIP"],
+      "demoUrl": "https://api.daljeetsingh.me",
+      "readme": "# Janus\nAdversarial botnet detection with a systems-first pipeline designed for noisy network traffic and operational visibility.",
+      "highlights": [
+        "Built in Go for operational simplicity and throughput.",
+        "Uses Redis-backed workflows and Dockerized services.",
+        "Designed around hostile, adversarial traffic patterns."
+      ]
+    },
+    {
+      "slug": "drisht",
+      "name": "DrishT",
+      "description": "Dual-stream AI navigation system exploring visual perception and decision support.",
+      "stack": ["Python", "OpenCV", "TensorFlow", "FastAPI"],
+      "readme": "# DrishT\nDual-stream AI navigation thesis project combining perception and guidance layers for assistive navigation.",
+      "highlights": [
+        "Research-oriented system architecture with real-time inference considerations.",
+        "Combines computer vision and navigation reasoning.",
+        "Implemented with Python-first ML tooling."
+      ]
+    },
+    {
+      "slug": "sp500",
+      "name": "S&P 500 Prediction",
+      "description": "ML-based financial time series experimentation over S&P 500 data.",
+      "stack": ["Python", "scikit-learn", "pandas"],
+      "readme": "# S&P 500 Prediction\nExploration of machine learning techniques for financial time series forecasting and evaluation.",
+      "highlights": [
+        "Feature engineering and experimentation with classical ML models.",
+        "Focused on evaluation discipline rather than hype.",
+        "Built with Python data tooling."
+      ]
+    }
+  ],
+  "filesystem": {
+    "~": {
+      "bio.txt": "Daljeet Singh Lotey. Software Developer based in Mumbai.\nI build product systems, backend services, AI features, and interfaces that reward power users.\n\nI believe great software is opinionated, composable, and observable.",
+      "now.txt": "Currently building terminal.daljeetsingh.me as a living portfolio interface.\nStack: Next.js 14, xterm.js, TypeScript, Zustand, Vercel AI SDK.\nFocusing on: systems thinking, developer experience, and shipping craft-level work.",
+      "projects": {
+        "janus": {
+          "README.md": "# Janus\nAdversarial botnet detection in Go with an operations-first architecture.\n\nDesigned for hostile, noisy network environments.\nUses Redis-backed workflows and Dockerized service containers.\nFocused on operational visibility over academic metrics.",
+          "stack.txt": "Go, Redis, Docker, GeoIP",
+          "demo.url": "https://api.daljeetsingh.me"
+        },
+        "drisht": {
+          "README.md": "# DrishT\nDual-stream AI navigation thesis system for perception-guided assistance.\n\nCombines computer vision and navigation reasoning layers.\nResearch-oriented with real-time inference considerations.\nImplemented with Python-first ML tooling.",
+          "stack.txt": "Python, OpenCV, TensorFlow, FastAPI"
+        },
+        "sp500": {
+          "README.md": "# S&P 500 Prediction\nML-based financial time series forecasting experiments.\n\nFeature engineering with classical ML models.\nFocused on evaluation discipline over hype.\nBuilt with Python data tooling.",
+          "stack.txt": "Python, scikit-learn, pandas"
+        }
+      },
+      "skills": {
+        "languages.txt": "Go, Python, TypeScript, JavaScript, Java, C++",
+        "frontend.txt": "React, Next.js, Vue, TailwindCSS",
+        "backend.txt": "Node.js, FastAPI, Django, Express",
+        "infra.txt": "Docker, Nginx, Azure, Linux, Redis, PostgreSQL"
+      },
+      "contact": {
+        "email.txt": "git@daljeetsingh.me",
+        "github.txt": "https://github.com/djtsingh",
+        "linkedin.txt": "https://linkedin.com/in/djtsingh"
+      },
+      "resume.pdf": "__DOWNLOAD__",
+      ".config": {
+        "theme.txt": "default\nAvailable: default, matrix, cyber, minimal, dracula\nRun 'theme <name>' to switch.",
+        "version.txt": "ecosphere v0.2.0\nBuilt with Next.js 14, xterm.js 6, TypeScript 5.7"
+      },
+      "secret": {
+        ".hidden": "You found it. Try: sudo make me a sandwich",
+        ".credits": "Built with caffeine, midnight commits, and an unreasonable attention to ANSI escape codes.\nTry: cowsay moo, matrix, hack, banner, neofetch"
+      }
+    }
+  }
+}
